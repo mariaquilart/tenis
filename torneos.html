@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Torneos 2026 — ATP Tour Rankings</title>
+  <link rel="stylesheet" href="estilos.css" />
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <a href="index.html" class="logo">
+        <div class="logo-icono">🎾</div>
+        <div class="logo-texto">
+          <span class="logo-titulo">ATP</span>
+          <span class="logo-subtitulo">Tour Rankings</span>
+        </div>
+      </a>
+      <nav>
+        <a href="index.html">Clasificación</a>
+        <a href="torneos.html" class="activo">Torneos</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-inner">
+      <h1>Torneos <span>ATP 2026</span></h1>
+      <p class="hero-sub">Resultados y calendario de la temporada ATP Tour 2026</p>
+      <div class="torneos-tabs">
+        <button class="tab-btn activo" id="btn-jugados" onclick="cambiarTab('jugados')">Resultados 2026</button>
+        <button class="tab-btn" id="btn-calendario" onclick="cambiarTab('calendario')">Próximos torneos</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB: TORNEOS JUGADOS -->
+  <main class="contenido-principal" id="tab-jugados">
+    <div class="filtros-cat">
+      <button class="filtro-btn activo" onclick="filtrar('todos', this)">Todos</button>
+      <button class="filtro-btn" onclick="filtrar('grand-slam', this)">Grand Slam</button>
+      <button class="filtro-btn" onclick="filtrar('m1000', this)">Masters 1000</button>
+      <button class="filtro-btn" onclick="filtrar('atp500', this)">ATP 500</button>
+      <button class="filtro-btn" onclick="filtrar('atp250', this)">ATP 250</button>
+    </div>
+    <div class="torneos-grid" id="torneos-grid"></div>
+  </main>
+
+  <!-- TAB: CALENDARIO -->
+  <main class="contenido-principal" id="tab-calendario" style="display:none">
+    <div id="proximos-contenido"></div>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <p class="footer-texto">© 2026 <span>ATP Tour Rankings</span> — Datos con fines ilustrativos</p>
+    </div>
+  </footer>
+
+  <script>
+    const CAT = {
+      'grand-slam': { label: 'Grand Slam',   color: '#c9a84c' },
+      'm1000':      { label: 'Masters 1000', color: '#e53935' },
+      'atp500':     { label: 'ATP 500',      color: '#00a8e0' },
+      'atp250':     { label: 'ATP 250',      color: '#6b7a8d' },
+      'atp-finals': { label: 'ATP Finals',   color: '#9C27B0' },
+    };
+
+    const SUP = {
+      'dura':     { label: 'Dura',     color: '#2196F3' },
+      'tierra':   { label: 'Tierra',   color: '#e06800' },
+      'hierba':   { label: 'Hierba',   color: '#2e7d32' },
+      'cubierta': { label: 'Cubierta', color: '#7b5ea7' },
+    };
+
+    const TORNEOS_JUGADOS = [
+      // ─── ATP 250 pre-Australian Open ───
+      { nombre: "Brisbane International",          ciudad: "Brisbane",       pais: "Australia",    bandera: "🇦🇺", cat: "atp250",     sup: "dura",     fi: "2026-01-04", ff: "2026-01-11", campeon: "D. Medvedev",          rc: 9,  finalista: "B. Nakashima",       rf: 31, resultado: "6-2  7-6(1)" },
+      { nombre: "Adelaide International",          ciudad: "Adelaida",       pais: "Australia",    bandera: "🇦🇺", cat: "atp250",     sup: "dura",     fi: "2026-01-12", ff: "2026-01-17", campeon: "T. Macháč",            rc: 49, finalista: "U. Humbert",         rf: 30, resultado: "6-4  6-7(2)  6-2" },
+      { nombre: "ASB Classic Auckland",            ciudad: "Auckland",       pais: "Nueva Zelanda",bandera: "🇳🇿", cat: "atp250",     sup: "dura",     fi: "2026-01-12", ff: "2026-01-17", campeon: "J. Menšík",            rc: 18, finalista: "S. Báez",            rf: 57, resultado: "6-3  7-6(7)" },
+      // ─── Australian Open ───
+      { nombre: "Australian Open",                 ciudad: "Melbourne",      pais: "Australia",    bandera: "🇦🇺", cat: "grand-slam", sup: "dura",     fi: "2026-01-18", ff: "2026-02-01", campeon: "C. Alcaraz",           rc: 2,  finalista: "N. Djokovic",        rf: 8,  resultado: "2-6  6-2  6-3  7-5" },
+      // ─── Febrero ───
+      { nombre: "Open Sud de France",              ciudad: "Montpellier",    pais: "Francia",      bandera: "🇫🇷", cat: "atp250",     sup: "cubierta", fi: "2026-02-02", ff: "2026-02-08", campeon: "A. Rinderknech",       rc: 28, finalista: "A. Mannarino",       rf: 40, resultado: "6-4  7-5" },
+      { nombre: "Dallas Open",                     ciudad: "Dallas",         pais: "EEUU",         bandera: "🇺🇸", cat: "atp500",     sup: "cubierta", fi: "2026-02-09", ff: "2026-02-15", campeon: "B. Shelton",           rc: 5,  finalista: "T. Fritz",           rf: 7,  resultado: "3-6  6-3  7-5" },
+      { nombre: "ABN AMRO Open",                   ciudad: "Róterdam",       pais: "Países Bajos", bandera: "🇳🇱", cat: "atp500",     sup: "cubierta", fi: "2026-02-09", ff: "2026-02-15", campeon: "A. de Minaur",         rc: 6,  finalista: "F. Auger-Aliassime", rf: 4,  resultado: "6-3  6-2" },
+      { nombre: "Argentina Open",                  ciudad: "Buenos Aires",   pais: "Argentina",    bandera: "🇦🇷", cat: "atp250",     sup: "tierra",   fi: "2026-02-09", ff: "2026-02-15", campeon: "F. Cerundolo",         rc: 21, finalista: "L. Darderi",         rf: 16, resultado: "6-4  6-2" },
+      { nombre: "Qatar ExxonMobil Open",           ciudad: "Doha",           pais: "Catar",        bandera: "🇶🇦", cat: "atp250",     sup: "dura",     fi: "2026-02-16", ff: "2026-02-21", campeon: "C. Alcaraz",           rc: 2,  finalista: "A. Fils",            rf: 24, resultado: "6-2  6-1" },
+      { nombre: "Rio Open",                        ciudad: "Río de Janeiro", pais: "Brasil",       bandera: "🇧🇷", cat: "atp500",     sup: "tierra",   fi: "2026-02-16", ff: "2026-02-22", campeon: "T. Etcheverry",        rc: 32, finalista: "A. Tabilo",          rf: 33, resultado: "3-6  7-6(3)  6-4" },
+      { nombre: "Delray Beach Open",               ciudad: "Delray Beach",   pais: "EEUU",         bandera: "🇺🇸", cat: "atp250",     sup: "dura",     fi: "2026-02-16", ff: "2026-02-22", campeon: "S. Korda",             rc: 63, finalista: "T. Paul",            rf: 25, resultado: "6-4  6-3" },
+      { nombre: "Open 13 Provence",                ciudad: "Marsella",       pais: "Francia",      bandera: "🇫🇷", cat: "atp250",     sup: "cubierta", fi: "2026-02-16", ff: "2026-02-22", campeon: "U. Humbert",           rc: 30, finalista: "A. Rinderknech",     rf: 28, resultado: "6-4  6-3" },
+      { nombre: "Abierto Mexicano Telcel",         ciudad: "Acapulco",       pais: "México",       bandera: "🇲🇽", cat: "atp500",     sup: "dura",     fi: "2026-02-23", ff: "2026-02-28", campeon: "F. Cobolli",           rc: 10, finalista: "F. Tiafoe",          rf: 19, resultado: "7-6(4)  6-4" },
+      { nombre: "Dubai Duty Free Championships",   ciudad: "Dubái",          pais: "EAU",          bandera: "🇦🇪", cat: "atp500",     sup: "dura",     fi: "2026-02-23", ff: "2026-02-28", campeon: "D. Medvedev",          rc: 9,  finalista: "T. Griekspoor",      rf: 58, resultado: "Walkover" },
+      // ─── Masters 1000 pista dura ───
+      { nombre: "Indian Wells Masters",            ciudad: "Indian Wells",   pais: "EEUU",         bandera: "🇺🇸", cat: "m1000",      sup: "dura",     fi: "2026-03-04", ff: "2026-03-15", campeon: "J. Sinner",            rc: 1,  finalista: "D. Medvedev",        rf: 9,  resultado: "7-6(6)  7-6(4)" },
+      { nombre: "Miami Open",                      ciudad: "Miami",          pais: "EEUU",         bandera: "🇺🇸", cat: "m1000",      sup: "dura",     fi: "2026-03-17", ff: "2026-03-29", campeon: "J. Sinner",            rc: 1,  finalista: "J. Lehecka",         rf: 14, resultado: "6-4  6-4" },
+      // ─── Tierra batida ───
+      { nombre: "Monte-Carlo Masters",             ciudad: "Mónaco",         pais: "Mónaco",       bandera: "🇲🇨", cat: "m1000",      sup: "tierra",   fi: "2026-04-05", ff: "2026-04-12", campeon: "J. Sinner",            rc: 1,  finalista: "C. Alcaraz",         rf: 2,  resultado: "7-6(5)  6-3" },
+      { nombre: "Barcelona Open Banc Sabadell",    ciudad: "Barcelona",      pais: "España",       bandera: "🇪🇸", cat: "atp500",     sup: "tierra",   fi: "2026-04-13", ff: "2026-04-19", campeon: "A. Fils",              rc: 24, finalista: "A. Rublev",          rf: 13, resultado: "6-2  7-6(2)" },
+      { nombre: "BMW Open Munich",                 ciudad: "Múnich",         pais: "Alemania",     bandera: "🇩🇪", cat: "atp500",     sup: "tierra",   fi: "2026-04-13", ff: "2026-04-19", campeon: "B. Shelton",           rc: 5,  finalista: "F. Cobolli",         rf: 10, resultado: "6-2  7-5" },
+      { nombre: "Madrid Open",                     ciudad: "Madrid",         pais: "España",       bandera: "🇪🇸", cat: "m1000",      sup: "tierra",   fi: "2026-04-21", ff: "2026-05-03", campeon: "J. Sinner",            rc: 1,  finalista: "A. Zverev",          rf: 3,  resultado: "6-1  6-2" },
+      { nombre: "Internazionali BNL d'Italia",     ciudad: "Roma",           pais: "Italia",       bandera: "🇮🇹", cat: "m1000",      sup: "tierra",   fi: "2026-05-05", ff: "2026-05-17", campeon: "J. Sinner",            rc: 1,  finalista: "C. Ruud",            rf: 12, resultado: "6-4  6-4" },
+      { nombre: "Geneva Open",                     ciudad: "Ginebra",        pais: "Suiza",        bandera: "🇨🇭", cat: "atp250",     sup: "tierra",   fi: "2026-05-17", ff: "2026-05-23", campeon: "L. Tien",              rc: 17, finalista: "M. Navone",          rf: 38, resultado: "3-6  6-3  7-5" },
+      { nombre: "Open Parc Auvergne-Rhône-Alpes", ciudad: "Lyon",           pais: "Francia",      bandera: "🇫🇷", cat: "atp250",     sup: "tierra",   fi: "2026-05-18", ff: "2026-05-24", campeon: "A. Fils",              rc: 24, finalista: "Z. Bergs",           rf: 37, resultado: "6-3  6-4" },
+      // ─── Roland Garros ───
+      { nombre: "Roland Garros",                   ciudad: "París",          pais: "Francia",      bandera: "🇫🇷", cat: "grand-slam", sup: "tierra",   fi: "2026-05-24", ff: "2026-06-07", campeon: "A. Zverev",            rc: 3,  finalista: "F. Cobolli",         rf: 10, resultado: "6-1  4-6  6-4  6-7(5)  6-1" },
+      // ─── Hierba ───
+      { nombre: "Stuttgart Open",                  ciudad: "Stuttgart",      pais: "Alemania",     bandera: "🇩🇪", cat: "atp250",     sup: "hierba",   fi: "2026-06-08", ff: "2026-06-14", campeon: "A. Bublik",            rc: 11, finalista: "C. Norrie",          rf: 29, resultado: "7-6(3)  6-4" },
+      { nombre: "Halle Open",                      ciudad: "Halle",          pais: "Alemania",     bandera: "🇩🇪", cat: "atp500",     sup: "hierba",   fi: "2026-06-15", ff: "2026-06-21", campeon: "F. Tiafoe",            rc: 19, finalista: "T. Fritz",           rf: 7,  resultado: "6-4  6-4" },
+      { nombre: "Queen's Club Championships",      ciudad: "Londres",        pais: "Reino Unido",  bandera: "🇬🇧", cat: "atp500",     sup: "hierba",   fi: "2026-06-15", ff: "2026-06-21", campeon: "F. Cerundolo",         rc: 21, finalista: "T. Paul",            rf: 25, resultado: "6-7(4)  6-4  6-3" },
+      { nombre: "Mallorca Championships",          ciudad: "Mallorca",       pais: "España",       bandera: "🇪🇸", cat: "atp250",     sup: "hierba",   fi: "2026-06-21", ff: "2026-06-27", campeon: "A. Davidovich Fokina", rc: 23, finalista: "E. Quinn",           rf: 47, resultado: "7-6(4)  6-3" },
+      { nombre: "Eastbourne International",        ciudad: "Eastbourne",     pais: "Reino Unido",  bandera: "🇬🇧", cat: "atp250",     sup: "hierba",   fi: "2026-06-22", ff: "2026-06-28", campeon: "J. Lehecka",           rc: 14, finalista: "B. Nakashima",       rf: 31, resultado: "7-6(4)  6-3" },
+    ];
+
+    const TORNEOS_PROXIMOS = [
+      // Julio
+      { nombre: "Wimbledon",                    ciudad: "Londres",        pais: "Reino Unido",  bandera: "🇬🇧", cat: "grand-slam", sup: "hierba",  fi: "2026-06-29", ff: "2026-07-12", estado: "en-curso" },
+      { nombre: "Hall of Fame Open",            ciudad: "Newport",        pais: "EEUU",         bandera: "🇺🇸", cat: "atp250",     sup: "hierba",  fi: "2026-07-07", ff: "2026-07-13" },
+      { nombre: "Nordea Open",                  ciudad: "Båstad",         pais: "Suecia",       bandera: "🇸🇪", cat: "atp250",     sup: "tierra",  fi: "2026-07-13", ff: "2026-07-19" },
+      { nombre: "Hamburg European Open",        ciudad: "Hamburgo",       pais: "Alemania",     bandera: "🇩🇪", cat: "atp500",     sup: "tierra",  fi: "2026-07-20", ff: "2026-07-26" },
+      { nombre: "Swiss Open Gstaad",            ciudad: "Gstaad",         pais: "Suiza",        bandera: "🇨🇭", cat: "atp250",     sup: "tierra",  fi: "2026-07-20", ff: "2026-07-26" },
+      { nombre: "Croatia Open Umag",            ciudad: "Umag",           pais: "Croacia",      bandera: "🇭🇷", cat: "atp250",     sup: "tierra",  fi: "2026-07-20", ff: "2026-07-26" },
+      { nombre: "Atlanta Open",                 ciudad: "Atlanta",        pais: "EEUU",         bandera: "🇺🇸", cat: "atp250",     sup: "dura",    fi: "2026-07-21", ff: "2026-07-27" },
+      { nombre: "Generali Open Kitzbühel",      ciudad: "Kitzbühel",      pais: "Austria",      bandera: "🇦🇹", cat: "atp250",     sup: "tierra",  fi: "2026-07-27", ff: "2026-08-02" },
+      { nombre: "Mifel Open Los Cabos",         ciudad: "Los Cabos",      pais: "México",       bandera: "🇲🇽", cat: "atp250",     sup: "dura",    fi: "2026-07-27", ff: "2026-08-02" },
+      { nombre: "Citi Open Washington",         ciudad: "Washington D.C.",pais: "EEUU",         bandera: "🇺🇸", cat: "atp500",     sup: "dura",    fi: "2026-07-27", ff: "2026-08-02" },
+      // Agosto
+      { nombre: "National Bank Open",           ciudad: "Toronto",        pais: "Canadá",       bandera: "🇨🇦", cat: "m1000",      sup: "dura",    fi: "2026-08-03", ff: "2026-08-09" },
+      { nombre: "Western & Southern Open",      ciudad: "Cincinnati",     pais: "EEUU",         bandera: "🇺🇸", cat: "m1000",      sup: "dura",    fi: "2026-08-10", ff: "2026-08-17" },
+      { nombre: "Winston-Salem Open",           ciudad: "Winston-Salem",  pais: "EEUU",         bandera: "🇺🇸", cat: "atp250",     sup: "dura",    fi: "2026-08-23", ff: "2026-08-29" },
+      { nombre: "US Open",                      ciudad: "Nueva York",     pais: "EEUU",         bandera: "🇺🇸", cat: "grand-slam", sup: "dura",    fi: "2026-08-31", ff: "2026-09-13" },
+      // Septiembre
+      { nombre: "Chengdu Open",                 ciudad: "Chengdu",        pais: "China",        bandera: "🇨🇳", cat: "atp250",     sup: "dura",    fi: "2026-09-14", ff: "2026-09-20" },
+      { nombre: "Moselle Open",                 ciudad: "Metz",           pais: "Francia",      bandera: "🇫🇷", cat: "atp250",     sup: "cubierta",fi: "2026-09-21", ff: "2026-09-27" },
+      { nombre: "Japan Open Tennis",            ciudad: "Tokio",          pais: "Japón",        bandera: "🇯🇵", cat: "atp500",     sup: "dura",    fi: "2026-09-28", ff: "2026-10-04" },
+      { nombre: "China Open",                   ciudad: "Pekín",          pais: "China",        bandera: "🇨🇳", cat: "atp500",     sup: "dura",    fi: "2026-09-28", ff: "2026-10-04" },
+      // Octubre
+      { nombre: "Shanghai Rolex Masters",       ciudad: "Shanghái",       pais: "China",        bandera: "🇨🇳", cat: "m1000",      sup: "dura",    fi: "2026-10-05", ff: "2026-10-12" },
+      { nombre: "Stockholm Open",               ciudad: "Estocolmo",      pais: "Suecia",       bandera: "🇸🇪", cat: "atp250",     sup: "cubierta",fi: "2026-10-12", ff: "2026-10-18" },
+      { nombre: "European Open",                ciudad: "Amberes",        pais: "Bélgica",      bandera: "🇧🇪", cat: "atp250",     sup: "cubierta",fi: "2026-10-12", ff: "2026-10-18" },
+      { nombre: "Erste Bank Open",              ciudad: "Viena",          pais: "Austria",      bandera: "🇦🇹", cat: "atp500",     sup: "cubierta",fi: "2026-10-19", ff: "2026-10-25" },
+      { nombre: "Swiss Indoors Basel",          ciudad: "Basilea",        pais: "Suiza",        bandera: "🇨🇭", cat: "atp500",     sup: "cubierta",fi: "2026-10-19", ff: "2026-10-25" },
+      { nombre: "Rolex Paris Masters",          ciudad: "París",          pais: "Francia",      bandera: "🇫🇷", cat: "m1000",      sup: "cubierta",fi: "2026-10-26", ff: "2026-11-01" },
+      // Noviembre
+      { nombre: "Nitto ATP Finals",             ciudad: "Turín",          pais: "Italia",       bandera: "🇮🇹", cat: "atp-finals", sup: "cubierta",fi: "2026-11-09", ff: "2026-11-15" },
+    ];
+
+    const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+    const MESES_C = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+
+    function formatFecha(fi, ff) {
+      const d1 = new Date(fi + 'T12:00:00');
+      const d2 = new Date(ff + 'T12:00:00');
+      if (d1.getMonth() === d2.getMonth()) {
+        return `${d1.getDate()}–${d2.getDate()} ${MESES_C[d1.getMonth()]} ${d1.getFullYear()}`;
+      }
+      return `${d1.getDate()} ${MESES_C[d1.getMonth()]} – ${d2.getDate()} ${MESES_C[d2.getMonth()]} ${d2.getFullYear()}`;
+    }
+
+    function catBadge(cat) {
+      const c = CAT[cat] || { label: cat, color: '#6b7a8d' };
+      return `<span class="badge-cat" style="background:${c.color}">${c.label}</span>`;
+    }
+
+    function supBadge(sup) {
+      const s = SUP[sup] || { label: sup, color: '#aaa' };
+      return `<span class="badge-sup" style="background:${s.color}1a;color:${s.color};border-color:${s.color}50">${s.label}</span>`;
+    }
+
+    function renderTorneos(lista) {
+      const grid = document.getElementById('torneos-grid');
+      if (!lista.length) {
+        grid.innerHTML = '<div class="no-resultados"><div class="icono">🎾</div><p>No hay torneos en esta categoría</p></div>';
+        return;
+      }
+      const sorted = lista.slice().sort((a, b) => new Date(b.fi) - new Date(a.fi));
+      grid.innerHTML = sorted.map(t => {
+        const c = CAT[t.cat] || { color: '#aaa' };
+        return `
+        <div class="torneo-card" data-cat="${t.cat}">
+          <div class="torneo-card-top" style="border-top:3px solid ${c.color}">
+            <div class="torneo-card-badges">
+              ${catBadge(t.cat)}
+              ${supBadge(t.sup)}
+            </div>
+            <div class="torneo-card-nombre">${t.nombre}</div>
+            <div class="torneo-card-lugar">${t.bandera} ${t.ciudad}, ${t.pais}</div>
+            <div class="torneo-card-fecha">${formatFecha(t.fi, t.ff)}</div>
+          </div>
+          <div class="torneo-card-final">
+            <div class="torneo-final-titulo">FINAL</div>
+            <div class="torneo-final-campeon">
+              <span class="trofeo">🏆</span>
+              <span class="campeon-nombre">${t.campeon}</span>
+              <span class="campeon-ranking">(${t.rc})</span>
+            </div>
+            <div class="torneo-final-vs">def. ${t.finalista} (${t.rf})</div>
+            <div class="torneo-final-resultado">${t.resultado}</div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    function filtrar(cat, btn) {
+      document.querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('activo'));
+      btn.classList.add('activo');
+      const lista = cat === 'todos' ? TORNEOS_JUGADOS : TORNEOS_JUGADOS.filter(t => t.cat === cat);
+      renderTorneos(lista);
+    }
+
+    function renderCalendario() {
+      const grupos = {};
+      TORNEOS_PROXIMOS.forEach(t => {
+        const mes = new Date(t.fi + 'T12:00:00').getMonth();
+        if (!grupos[mes]) grupos[mes] = [];
+        grupos[mes].push(t);
+      });
+
+      document.getElementById('proximos-contenido').innerHTML = Object.entries(grupos).map(([mes, torneos]) => `
+        <div class="cal-mes">
+          <div class="cal-mes-titulo">${MESES[parseInt(mes)]} 2026</div>
+          <div class="cal-lista">
+            ${torneos.map(t => `
+              <div class="cal-item ${t.estado === 'en-curso' ? 'en-curso' : ''}">
+                <div class="cal-item-fecha">${formatFecha(t.fi, t.ff)}</div>
+                <div class="cal-item-info">
+                  <div class="cal-item-nombre">
+                    ${t.estado === 'en-curso' ? '<span class="badge-en-curso">EN CURSO</span>' : ''}
+                    ${t.nombre}
+                  </div>
+                  <div class="cal-item-lugar">${t.bandera} ${t.ciudad}, ${t.pais}</div>
+                </div>
+                <div class="cal-item-badges">
+                  ${catBadge(t.cat)}
+                  ${supBadge(t.sup)}
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function cambiarTab(tab) {
+      document.getElementById('tab-jugados').style.display   = tab === 'jugados'    ? '' : 'none';
+      document.getElementById('tab-calendario').style.display = tab === 'calendario' ? '' : 'none';
+      document.getElementById('btn-jugados').classList.toggle('activo',    tab === 'jugados');
+      document.getElementById('btn-calendario').classList.toggle('activo', tab === 'calendario');
+    }
+
+    renderTorneos(TORNEOS_JUGADOS);
+    renderCalendario();
+  </script>
+</body>
+</html>

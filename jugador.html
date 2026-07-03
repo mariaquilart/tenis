@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Perfil de Jugador — ATP Rankings</title>
+  <link rel="stylesheet" href="estilos.css" />
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <a href="index.html" class="logo">
+        <div class="logo-icono">🎾</div>
+        <div class="logo-texto">
+          <span class="logo-titulo">ATP</span>
+          <span class="logo-subtitulo">Tour Rankings</span>
+        </div>
+      </a>
+      <nav>
+        <a href="index.html">Clasificación</a>
+        <a href="torneos.html">Torneos</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="perfil-hero" id="perfil-hero">
+    <div class="perfil-hero-inner">
+      <div class="perfil-avatar" id="perfil-avatar"></div>
+      <div class="perfil-datos">
+        <a href="index.html" class="btn-volver">← Volver a clasificación</a>
+        <div style="height:14px"></div>
+        <div class="ranking-badge" id="ranking-badge">🏆 #1 del mundo</div>
+        <h1 class="perfil-nombre" id="perfil-nombre">—</h1>
+        <div class="perfil-pais">
+          <span class="perfil-bandera" id="perfil-bandera"></span>
+          <span id="perfil-pais-nombre"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="stats-bar">
+    <div class="stats-bar-inner">
+      <div class="stat-item">
+        <div class="stat-valor azul" id="stat-puntos">—</div>
+        <div class="stat-etiqueta">Puntos ATP</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-valor" id="stat-titulos-ano">—</div>
+        <div class="stat-etiqueta">Títulos año</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-valor" id="stat-titulos-carrera">—</div>
+        <div class="stat-etiqueta">Títulos carrera</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-valor" id="stat-ranking-max">—</div>
+        <div class="stat-etiqueta">Ranking máximo</div>
+      </div>
+    </div>
+  </section>
+
+  <main class="perfil-contenido">
+
+    <div class="tarjeta">
+      <div class="tarjeta-cabecera">
+        <div class="tarjeta-titulo">Información Personal</div>
+      </div>
+      <div class="tarjeta-cuerpo">
+        <div class="dato-fila">
+          <span class="dato-etiqueta">Fecha de nacimiento</span>
+          <span class="dato-valor" id="dato-nacimiento">—</span>
+        </div>
+        <div class="dato-fila">
+          <span class="dato-etiqueta">Edad</span>
+          <span class="dato-valor" id="dato-edad">—</span>
+        </div>
+        <div class="dato-fila">
+          <span class="dato-etiqueta">Lugar de nacimiento</span>
+          <span class="dato-valor" id="dato-lugar">—</span>
+        </div>
+        <div class="dato-fila">
+          <span class="dato-etiqueta">Nacionalidad</span>
+          <span class="dato-valor" id="dato-nacionalidad">—</span>
+        </div>
+        <div class="dato-fila">
+          <span class="dato-etiqueta">Altura</span>
+          <span class="dato-valor" id="dato-altura">—</span>
+        </div>
+        <div class="dato-fila">
+          <span class="dato-etiqueta">Mano dominante</span>
+          <span class="dato-valor" id="dato-mano">—</span>
+        </div>
+        <div class="dato-fila">
+          <span class="dato-etiqueta">Profesional desde</span>
+          <span class="dato-valor" id="dato-profesional">—</span>
+        </div>
+        <div class="dato-fila">
+          <span class="dato-etiqueta">Premio total en carrera</span>
+          <span class="dato-valor" id="dato-premios">—</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:24px;">
+
+      <div class="tarjeta">
+        <div class="tarjeta-cabecera">
+          <div class="tarjeta-titulo">Ranking Actual</div>
+        </div>
+        <div class="tarjeta-cuerpo">
+          <div class="dato-fila">
+            <span class="dato-etiqueta">Posición mundial</span>
+            <span class="dato-valor destacado" id="dato-ranking">—</span>
+          </div>
+          <div class="dato-fila">
+            <span class="dato-etiqueta">Puntos ATP</span>
+            <span class="dato-valor" id="dato-puntos2">—</span>
+          </div>
+          <div class="dato-fila">
+            <span class="dato-etiqueta">Ranking máximo</span>
+            <span class="dato-valor" id="dato-rankingmax2">—</span>
+          </div>
+          <div class="dato-fila">
+            <span class="dato-etiqueta">Variación semana</span>
+            <span class="dato-valor" id="dato-mov">—</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tarjeta">
+        <div class="tarjeta-cabecera">
+          <div class="tarjeta-titulo">Palmarés</div>
+        </div>
+        <div class="tarjeta-cuerpo">
+          <div class="dato-fila">
+            <span class="dato-etiqueta">Títulos esta temporada</span>
+            <span class="dato-valor destacado" id="dato-titulos-ano2">—</span>
+          </div>
+          <div class="dato-fila">
+            <span class="dato-etiqueta">Títulos en carrera</span>
+            <span class="dato-valor" id="dato-titulos-carrera2">—</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <p class="footer-texto">© 2025 <span>ATP Tour Rankings</span> — Datos con fines ilustrativos</p>
+    </div>
+  </footer>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox" onclick="cerrarLightbox()">
+    <button class="lightbox-cerrar" onclick="cerrarLightbox()">✕</button>
+    <img class="lightbox-img" id="lightbox-img" src="" alt="" onclick="event.stopPropagation()" />
+    <span class="lightbox-pie" id="lightbox-pie"></span>
+  </div>
+
+  <script src="jugadores.js"></script>
+  <script>
+    const COLORES_AVATAR = [
+      '#e74c3c', '#3498db', '#2ecc71', '#f39c12', '#9b59b6',
+      '#1abc9c', '#e67e22', '#c0392b', '#2980b9', '#27ae60',
+      '#d35400', '#8e44ad', '#16a085', '#2c3e50', '#e91e63'
+    ];
+
+    function colorAvatar(id) {
+      return COLORES_AVATAR[id % COLORES_AVATAR.length];
+    }
+
+    function iniciales(nombre) {
+      return nombre.split(' ').slice(0, 2).map(p => p[0]).join('').toUpperCase();
+    }
+
+    function calcularEdad(nacimiento) {
+      const hoy = new Date();
+      const nac = new Date(nacimiento);
+      let edad = hoy.getFullYear() - nac.getFullYear();
+      const m = hoy.getMonth() - nac.getMonth();
+      if (m < 0 || (m === 0 && hoy.getDate() < nac.getDate())) edad--;
+      return edad;
+    }
+
+    function formatFecha(fecha) {
+      const [y, m, d] = fecha.split('-');
+      const meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+      return `${parseInt(d)} de ${meses[parseInt(m)-1]} de ${y}`;
+    }
+
+    function formatPuntos(n) {
+      return n.toLocaleString('es-ES');
+    }
+
+    async function cargarFotoPerfil(jugador) {
+      const avatar = document.getElementById('perfil-avatar');
+      if (!jugador.wikipedia) { avatar.classList.remove('cargando-foto'); return; }
+      try {
+        const apiUrl = `https://en.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(jugador.wikipedia)}&prop=pageimages&format=json&pithumbsize=400&origin=*`;
+        const res = await fetch(apiUrl);
+        if (!res.ok) throw new Error('error');
+        const data = await res.json();
+        const pages = data.query?.pages;
+        if (!pages) throw new Error('sin páginas');
+        const page = Object.values(pages)[0];
+        const url = page.thumbnail?.source;
+        if (url) {
+          const img = new Image();
+          img.onload = () => {
+            avatar.innerHTML = '';
+            avatar.appendChild(img);
+            avatar.classList.add('con-foto');
+            avatar.classList.remove('cargando-foto');
+            avatar.style.background = 'transparent';
+            avatar.style.border = '4px solid rgba(255,255,255,0.25)';
+            img.style.cursor = 'zoom-in';
+            img.addEventListener('click', () => {
+              abrirLightbox(url.replace(/\/\d+px-/, '/600px-'), jugador.nombre);
+            });
+          };
+          img.onerror = () => avatar.classList.remove('cargando-foto');
+          img.src = url;
+          img.alt = jugador.nombre;
+        } else {
+          avatar.classList.remove('cargando-foto');
+        }
+      } catch {
+        avatar.classList.remove('cargando-foto');
+      }
+    }
+
+    function abrirLightbox(src, nombre) {
+      document.getElementById('lightbox-img').src = src;
+      document.getElementById('lightbox-pie').textContent = nombre;
+      document.getElementById('lightbox').classList.add('activo');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function cerrarLightbox() {
+      document.getElementById('lightbox').classList.remove('activo');
+      document.body.style.overflow = '';
+    }
+
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') cerrarLightbox(); });
+
+    function movTexto(mov) {
+      if (mov > 0) return `<span style="color:#00b86b;font-weight:700">▲ +${mov}</span>`;
+      if (mov < 0) return `<span style="color:#e53935;font-weight:700">▼ ${mov}</span>`;
+      return `<span style="color:#b0b8c6">Sin cambios</span>`;
+    }
+
+    // Leer el id del jugador desde la URL
+    const params = new URLSearchParams(window.location.search);
+    const id = parseInt(params.get('id'));
+    const jugador = JUGADORES.find(j => j.id === id);
+
+    if (!jugador) {
+      document.body.innerHTML = `
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;gap:20px;background:#0a1628;color:#fff;">
+          <div style="font-size:60px">🎾</div>
+          <h2 style="font-size:24px">Jugador no encontrado</h2>
+          <a href="index.html" style="color:#00a8e0;text-decoration:none;font-weight:700">← Volver a la clasificación</a>
+        </div>`;
+    } else {
+      const color = colorAvatar(jugador.id);
+
+      // Avatar: iniciales como estado inicial, foto real cuando cargue
+      const avatar = document.getElementById('perfil-avatar');
+      avatar.textContent = iniciales(jugador.nombre);
+      avatar.style.background = color;
+      avatar.classList.add('cargando-foto');
+      cargarFotoPerfil(jugador);
+
+      // Actualizar título de la página
+      document.title = `${jugador.nombre} — ATP Rankings`;
+
+      // Hero datos
+      document.getElementById('ranking-badge').textContent = `🏆 #${jugador.ranking} del mundo`;
+      document.getElementById('perfil-nombre').textContent = jugador.nombre;
+      document.getElementById('perfil-bandera').textContent = jugador.bandera;
+      document.getElementById('perfil-pais-nombre').textContent = jugador.pais;
+
+      // Stats bar
+      document.getElementById('stat-puntos').textContent = formatPuntos(jugador.puntos);
+      document.getElementById('stat-titulos-ano').textContent = jugador.titulosAno;
+      document.getElementById('stat-titulos-carrera').textContent = jugador.titulosCarrera;
+      document.getElementById('stat-ranking-max').textContent = `#${jugador.rankingMax}`;
+
+      // Info personal
+      document.getElementById('dato-nacimiento').textContent = formatFecha(jugador.nacimiento);
+      document.getElementById('dato-edad').textContent = `${calcularEdad(jugador.nacimiento)} años`;
+      document.getElementById('dato-lugar').textContent = jugador.lugar;
+      document.getElementById('dato-nacionalidad').innerHTML = `${jugador.bandera} ${jugador.pais}`;
+      document.getElementById('dato-altura').textContent = `${jugador.altura} cm`;
+      document.getElementById('dato-mano').textContent = jugador.mano;
+      document.getElementById('dato-profesional').textContent = jugador.profesional;
+      document.getElementById('dato-premios').textContent = jugador.premios;
+
+      // Ranking
+      document.getElementById('dato-ranking').textContent = `#${jugador.ranking}`;
+      document.getElementById('dato-puntos2').textContent = `${formatPuntos(jugador.puntos)} pts`;
+      document.getElementById('dato-rankingmax2').textContent = `#${jugador.rankingMax}`;
+      document.getElementById('dato-mov').innerHTML = movTexto(jugador.mov);
+
+      // Palmarés
+      document.getElementById('dato-titulos-ano2').textContent = jugador.titulosAno;
+      document.getElementById('dato-titulos-carrera2').textContent = jugador.titulosCarrera;
+    }
+  </script>
+</body>
+</html>

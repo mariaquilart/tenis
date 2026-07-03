@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clasificación ATP — Top 100</title>
+  <link rel="stylesheet" href="estilos.css" />
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <a href="index.html" class="logo">
+        <div class="logo-icono">🎾</div>
+        <div class="logo-texto">
+          <span class="logo-titulo">ATP</span>
+          <span class="logo-subtitulo">Tour Rankings</span>
+        </div>
+      </a>
+      <nav>
+        <a href="index.html" class="activo">Clasificación</a>
+        <a href="torneos.html">Torneos</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-inner">
+      <h1>Clasificación <span>ATP</span> — Top 100</h1>
+      <p class="hero-sub">Clasificación mundial de jugadores profesionales de tenis masculino</p>
+      <div class="busqueda-bar">
+        <div class="busqueda-input-wrap">
+          <span class="busqueda-icono">🔍</span>
+          <input
+            type="text"
+            id="busqueda"
+            placeholder="Buscar jugador..."
+            autocomplete="off"
+          />
+        </div>
+        <span class="contador-resultados" id="contador">100 jugadores</span>
+      </div>
+    </div>
+  </section>
+
+  <main class="contenido-principal">
+    <div class="tabla-contenedor">
+      <table class="tabla-clasificacion">
+        <thead>
+          <tr>
+            <th style="width:56px">Pos.</th>
+            <th style="width:42px" class="centro">±</th>
+            <th>Jugador</th>
+            <th class="ocultar-mobile derecha">Puntos ATP</th>
+            <th class="derecha">Títulos</th>
+          </tr>
+        </thead>
+        <tbody id="cuerpo-tabla">
+        </tbody>
+      </table>
+      <div class="no-resultados" id="sin-resultados" style="display:none">
+        <div class="icono">🎾</div>
+        <p>No se encontraron jugadores</p>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <p class="footer-texto">© 2025 <span>ATP Tour Rankings</span> — Datos con fines ilustrativos</p>
+    </div>
+  </footer>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox" onclick="cerrarLightbox()">
+    <button class="lightbox-cerrar" onclick="cerrarLightbox()">✕</button>
+    <img class="lightbox-img" id="lightbox-img" src="" alt="" onclick="event.stopPropagation()" />
+    <span class="lightbox-pie" id="lightbox-pie"></span>
+  </div>
+
+  <script src="jugadores.js"></script>
+  <script>
+    const COLORES_AVATAR = [
+      '#e74c3c', '#3498db', '#2ecc71', '#f39c12', '#9b59b6',
+      '#1abc9c', '#e67e22', '#c0392b', '#2980b9', '#27ae60',
+      '#d35400', '#8e44ad', '#16a085', '#2c3e50', '#e91e63'
+    ];
+
+    function colorAvatar(id) {
+      return COLORES_AVATAR[id % COLORES_AVATAR.length];
+    }
+
+    function iniciales(nombre) {
+      return nombre.split(' ').slice(0, 2).map(p => p[0]).join('').toUpperCase();
+    }
+
+    function movHtml(mov) {
+      if (mov > 0) return `<div class="mov positivo">&#9650;${mov}</div>`;
+      if (mov < 0) return `<div class="mov negativo">&#9660;${Math.abs(mov)}</div>`;
+      return `<div class="mov neutro">&mdash;</div>`;
+    }
+
+    function formatPuntos(n) {
+      return n.toLocaleString('es-ES');
+    }
+
+    function renderTabla(lista) {
+      const tbody = document.getElementById('cuerpo-tabla');
+      const sinResultados = document.getElementById('sin-resultados');
+      const contador = document.getElementById('contador');
+
+      if (lista.length === 0) {
+        tbody.innerHTML = '';
+        sinResultados.style.display = 'block';
+        contador.textContent = '0 jugadores';
+        return;
+      }
+
+      sinResultados.style.display = 'none';
+      contador.textContent = `${lista.length} jugador${lista.length !== 1 ? 'es' : ''}`;
+
+      tbody.innerHTML = lista.map(j => `
+        <tr class="${j.ranking <= 3 ? 'top3' : ''}" onclick="window.location='jugador.html?id=${j.id}'">
+          <td>
+            <span class="ranking-num">${j.ranking}</span>
+          </td>
+          <td class="centro">${movHtml(j.mov)}</td>
+          <td>
+            <div class="jugador-celda">
+              <div
+                class="jugador-avatar cargando-foto"
+                id="av-${j.id}"
+                style="background:${colorAvatar(j.id)}"
+                data-wiki="${j.wikipedia || ''}"
+                data-nombre="${j.nombre}"
+              >
+                ${iniciales(j.nombre)}
+              </div>
+              <div class="jugador-info">
+                <span class="jugador-nombre">${j.nombre}</span>
+                <span class="jugador-pais-mini">
+                  <span class="bandera-mini">${j.bandera}</span>
+                  ${j.pais}
+                </span>
+              </div>
+            </div>
+          </td>
+          <td class="ocultar-mobile derecha">
+            <span class="puntos">${formatPuntos(j.puntos)}</span><br>
+            <span class="puntos-label">pts</span>
+          </td>
+          <td class="derecha">
+            <span class="puntos">${j.titulosAno}</span><br>
+            <span class="puntos-label">este año</span>
+          </td>
+        </tr>
+      `).join('');
+
+      observarAvatares();
+    }
+
+    const cacheWiki = {};
+
+    async function cargarFotoAvatar(el, wiki) {
+      if (!wiki) { el.classList.remove('cargando-foto'); return; }
+      try {
+        let url = cacheWiki[wiki];
+        if (!url) {
+          const apiUrl = `https://en.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(wiki)}&prop=pageimages&format=json&pithumbsize=120&origin=*`;
+          const res = await fetch(apiUrl);
+          if (!res.ok) throw new Error('error');
+          const data = await res.json();
+          const pages = data.query?.pages;
+          if (!pages) throw new Error('sin páginas');
+          const page = Object.values(pages)[0];
+          url = page.thumbnail?.source;
+          if (url) cacheWiki[wiki] = url;
+        }
+        if (url) {
+          const img = new Image();
+          img.onload = () => {
+            el.innerHTML = '';
+            el.appendChild(img);
+            el.classList.add('con-foto');
+            el.classList.remove('cargando-foto');
+            const nombre = el.dataset.nombre || '';
+            img.addEventListener('click', (e) => {
+              e.stopPropagation();
+              const bigUrl = url.replace(/\/\d+px-/, '/500px-');
+              abrirLightbox(bigUrl, nombre);
+            });
+          };
+          img.onerror = () => el.classList.remove('cargando-foto');
+          img.src = url;
+          img.alt = '';
+        } else {
+          el.classList.remove('cargando-foto');
+        }
+      } catch {
+        el.classList.remove('cargando-foto');
+      }
+    }
+
+    function observarAvatares() {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const el = entry.target;
+            const wiki = el.dataset.wiki;
+            if (wiki && !el.dataset.cargado) {
+              el.dataset.cargado = '1';
+              cargarFotoAvatar(el, wiki);
+              observer.unobserve(el);
+            } else if (!wiki) {
+              el.classList.remove('cargando-foto');
+              observer.unobserve(el);
+            }
+          }
+        });
+      }, { rootMargin: '200px' });
+
+      document.querySelectorAll('.jugador-avatar[data-wiki]').forEach(el => observer.observe(el));
+    }
+
+    function abrirLightbox(src, nombre) {
+      document.getElementById('lightbox-img').src = src;
+      document.getElementById('lightbox-pie').textContent = nombre;
+      document.getElementById('lightbox').classList.add('activo');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function cerrarLightbox() {
+      document.getElementById('lightbox').classList.remove('activo');
+      document.body.style.overflow = '';
+    }
+
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') cerrarLightbox(); });
+
+    function normalizar(str) {
+      return str.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+    }
+
+    // Búsqueda en tiempo real
+    document.getElementById('busqueda').addEventListener('input', function () {
+      const q = normalizar(this.value.trim());
+      if (!q) {
+        renderTabla(JUGADORES);
+        return;
+      }
+      const filtrados = JUGADORES.filter(j =>
+        normalizar(j.nombre).includes(q) ||
+        normalizar(j.pais).includes(q) ||
+        j.codigo.toLowerCase().includes(q)
+      );
+      renderTabla(filtrados);
+    });
+
+    // Render inicial
+    renderTabla(JUGADORES);
+  </script>
+</body>
+</html>
