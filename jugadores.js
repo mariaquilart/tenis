@@ -100,3 +100,4 @@ const JUGADORES = [
   { id: 99, ranking: 99, nombre: "Aleksandr Shevchenko", pais: "Kazajistán", codigo: "KAZ", bandera: "🇰🇿", puntos: 658, mov: 1, nacimiento: "1999-01-24", lugar: "Kazajistán", altura: 185, mano: "Derecha", profesional: 2018, rankingMax: 63, titulosCarrera: 2, titulosAno: 0, premios: "2.000.000 $", wikipedia: "Aleksandr_Shevchenko_(tennis)" },
   { id: 100, ranking: 100, nombre: "Jan Choinski", pais: "Gran Bretaña", codigo: "GBR", bandera: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", puntos: 657, mov: 6, nacimiento: "1998-06-14", lugar: "Potsdam, Alemania", altura: 188, mano: "Derecha", profesional: 2020, rankingMax: 83, titulosCarrera: 1, titulosAno: 0, premios: "1.200.000 $", wikipedia: "Jan_Choinski" }
 ];
+
